@@ -324,6 +324,12 @@ public class StaggeredGridView extends ExtendableListView {
             setSelection(0);
         }
     }
+    
+    ///// us
+    public void goToTopWithOffset(final int offset) {
+        layoutChildrenForcingTop();
+        offsetChildrenTopAndBottom(offset);
+    }
 
     // //////////////////////////////////////////////////////////////////////////////////////////
     // POSITIONING
@@ -1254,7 +1260,6 @@ public class StaggeredGridView extends ExtendableListView {
 
     @Override
     public Parcelable onSaveInstanceState() {
-        Log.d(TAG, "onSaveInstanceState()");
         ListSavedState listState = (ListSavedState) super.onSaveInstanceState();
         GridListSavedState ss = new GridListSavedState(listState.getSuperState());
 
@@ -1285,7 +1290,6 @@ public class StaggeredGridView extends ExtendableListView {
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        Log.d(TAG, "onRestoreInstanceState()");
         GridListSavedState ss = (GridListSavedState) state;
         mColumnCount = ss.columnCount;
         mColumnTops = ss.columnTops;

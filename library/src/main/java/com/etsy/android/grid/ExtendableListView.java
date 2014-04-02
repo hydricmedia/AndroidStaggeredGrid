@@ -309,7 +309,7 @@ public abstract class ExtendableListView extends AbsListView {
             requestLayout();
         }
     }
-
+    
     // //////////////////////////////////////////////////////////////////////////////////////////
     // HEADER & FOOTER
     //
@@ -519,6 +519,11 @@ public abstract class ExtendableListView extends AbsListView {
         mInLayout = false;
     }
 
+    protected void layoutChildrenForcingTop() {
+        mLayoutMode = LAYOUT_FORCE_TOP;
+        layoutChildren();
+    }
+    
     /**
      * {@inheritDoc}
      */
