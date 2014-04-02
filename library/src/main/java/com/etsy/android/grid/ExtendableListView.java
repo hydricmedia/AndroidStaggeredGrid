@@ -256,17 +256,22 @@ public abstract class ExtendableListView extends AbsListView {
             mAdapter.unregisterDataSetObserver(mObserver);
         }
 
+        Log.d(TAG, "mHeaderViewInfos.size(): "+mHeaderViewInfos.size()+", mFooterViewInfos.size(): "+mFooterViewInfos.size());
         // use a wrapper list adapter if we have a header or footer
         if (mHeaderViewInfos.size() > 0 || mFooterViewInfos.size() > 0) {
             mAdapter = new HeaderViewListAdapter(mHeaderViewInfos, mFooterViewInfos, adapter);
+            Log.d(TAG, "adapter is now a HeaderViewListAdapter");
         }
         else {
             mAdapter = adapter;
+            Log.d(TAG, "adapter is NOT a HeaderViewListAdapter");
         }
 
         mDataChanged = true;
-        mItemCount = adapter != null ? adapter.getCount() : 0;
+        mItemCount = adapter != null ? mAdapter.getCount() : 0;
 
+        Log.d(TAG, "mItemCount: "+mItemCount);
+        
         if (adapter != null) {
             adapter.registerDataSetObserver(mObserver);
             mRecycleBin.setViewTypeCount(adapter.getViewTypeCount());
@@ -558,7 +563,7 @@ public abstract class ExtendableListView extends AbsListView {
                         + "ExtendableListView did not receive a notification. Make sure the content of "
                         + "your adapter is not modified from a background thread, but only "
                         + "from the UI thread. [in ExtendableListView(" + getId() + ", " + getClass()
-                        + ") with Adapter(" + mAdapter.getClass() + ")]");
+                        + ") with Adapter(" + mAdapter.getClass() + ")] ---- mItemCount: "+mItemCount+", mAdapter.getCount(): "+mAdapter.getCount());
             }
 
             // Pull all children into the RecycleBin.
