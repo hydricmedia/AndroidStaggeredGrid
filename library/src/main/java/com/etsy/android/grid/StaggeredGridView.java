@@ -669,7 +669,7 @@ public class StaggeredGridView extends ExtendableListView {
     }
 
     @Override
-    protected int getHighestChildTop() {
+    public int getHighestChildTop() {
         if (isHeaderOrFooter(mFirstPosition)) {
             return super.getHighestChildTop();
         }
@@ -677,7 +677,7 @@ public class StaggeredGridView extends ExtendableListView {
     }
 
     @Override
-    protected int getLowestChildBottom() {
+    public int getLowestChildBottom() {
         final int lastPosition = mFirstPosition + (getChildCount() - 1);
         if (isHeaderOrFooter(lastPosition)) {
             return super.getLowestChildBottom();
