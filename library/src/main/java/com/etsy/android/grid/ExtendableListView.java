@@ -27,7 +27,12 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -268,13 +273,13 @@ public abstract class ExtendableListView extends AbsListView {
         }
 
         mDataChanged = true;
-        mItemCount = adapter != null ? mAdapter.getCount() : 0;
+        mItemCount = mAdapter != null ? mAdapter.getCount() : 0;
 
         Log.d(TAG, "mItemCount: "+mItemCount);
         
-        if (adapter != null) {
-            adapter.registerDataSetObserver(mObserver);
-            mRecycleBin.setViewTypeCount(adapter.getViewTypeCount());
+        if (mAdapter != null) {
+            mAdapter.registerDataSetObserver(mObserver);
+            mRecycleBin.setViewTypeCount(mAdapter.getViewTypeCount());
         }
 
         requestLayout();
@@ -683,7 +688,6 @@ public abstract class ExtendableListView extends AbsListView {
         // we're not passing this down as
         // all the touch handling is right here
         // super.onTouchEvent(event);
-
         if (!isEnabled()) {
             // A disabled view that is clickable still consumes the touch
             // events, it just doesn't respond to them.
@@ -834,7 +838,6 @@ public abstract class ExtendableListView extends AbsListView {
                 getAdapter().isEnabled(motionPosition)) {
             // is it a tap or a scroll .. we don't know yet!
             mTouchMode = TOUCH_MODE_DOWN;
-
             // TODO : add handling for a click removed from here
 
             if (event.getEdgeFlags() != 0 && motionPosition < 0) {
@@ -854,7 +857,6 @@ public abstract class ExtendableListView extends AbsListView {
         mMotionY = y;
         mMotionPosition = motionPosition;
         mLastY = Integer.MIN_VALUE;
-
         return true;
     }
 
@@ -910,7 +912,6 @@ public abstract class ExtendableListView extends AbsListView {
             case TOUCH_MODE_SCROLLING:
                 return onTouchUpScrolling(event);
         }
-
         setPressed(false);
         invalidate(); // redraw selector
         recycleVelocityTracker();
@@ -1831,7 +1832,7 @@ public abstract class ExtendableListView extends AbsListView {
 
     @Override
     public int getLastVisiblePosition() {
-        return Math.min(mFirstPosition + getChildCount() - 1, mAdapter.getCount() - 1);
+        return Math.min(mFirstPosition + getChildCount() - 1, mAdapter != null ? mAdapter.getCount() - 1 : 0);
     }
 
     // //////////////////////////////////////////////////////////////////////////////////////////
@@ -2749,7 +2750,6 @@ public abstract class ExtendableListView extends AbsListView {
                     motionPosition != INVALID_POSITION &&
                     motionPosition < adapter.getCount() && sameWindow()) {
                 final View view = getChildAt(motionPosition); // a fix by @pboos
-
                 if (view != null) {
                     performItemClick(view, motionPosition + mFirstPosition, adapter.getItemId(motionPosition));
                 }
